@@ -1,25 +1,41 @@
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import Card from './components/cards/cards';
+import Table from './components/table/table';
+import Grid from './components/grids/grids'
+import LinearProgress from '@material-ui/core/LinearProgress';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+          this.state = {
+            isDataLoading:false,
+            listDataFromChild: [{TableHeader:'TableData'}]
+    };    
 }
 
-export default App;
+myProgress = (state) =>{
+  if(this.state.isDataLoading!=false)
+  this.setState({
+    isDataLoading:state
+  })
+}
+    myCallback = (dataFromChild) => {   //callBackFunction
+      
+    this.setState({ listDataFromChild: dataFromChild, isDataLoading:true });
+    console.log(Object.keys(dataFromChild))
+}
+
+  render() {
+    return (
+      <React.Fragment>
+        <Card callbackFromParent={this.myCallback} myProgress={this.myProgress}/>
+        {this.state.isDataLoading&&<LinearProgress/>}
+        <Table tableData={this.state.listDataFromChild} myProgress={this.myProgress}/>
+        <Grid />
+      </React.Fragment>
+    );
+  }
+}
+
+export default App; 
